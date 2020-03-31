@@ -1,6 +1,7 @@
 ﻿using GraphQL.Language.AST;
 using Newtonsoft.Json;
 using OSIsoft.AF.Asset;
+using PiGraphQlOwinServer.GraphQl;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -42,12 +43,10 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if (afAttributesField != null)
             {
 
-                Field afAttributesChildField = afAttributesField.SelectionSet.Children.FirstOrDefault(x => (x as Field).Name == "afAttributes") as Field;
+                var afAttributesNameFilterStrings = GraphQlHelpers.GetArgument(afAttributesField, "nameFilter");
+                var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afAttributesField, "afAttributes");
 
-                var afAttributesNameFilterArgument = afAttributesField.Arguments.FirstOrDefault(x => x.Name == "nameFilter");
-                List<object> afAttributesNameFilterStrings = afAttributesNameFilterArgument != null ? afAttributesNameFilterArgument.Value.Value as List<object> : new List<object>();
-
-                ConcurrentBag<GraphQlAfAttribute> returnAttributesObject = new ConcurrentBag<GraphQlAfAttribute>();
+                var returnAttributesObject = new ConcurrentBag<GraphQlAfAttribute>();
                 var afAttributeList = aAfAttribute.Attributes.ToList<AFAttribute>();
                 Parallel.ForEach(afAttributeList, aAfChildAttribute =>
                 {
@@ -56,7 +55,7 @@ namespace PiGraphQlOwinServer.GraphQlModel
                         returnAttributesObject.Add(new GraphQlAfAttribute(aAfAttribute, afAttributesChildField));
                     }
                 });
-                afAttributes = returnAttributesObject.ToList();
+                afAttributes = returnAttributesObject.OrderBy(x=>x.name).ToList();
             }
         }
     }

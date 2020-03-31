@@ -1,6 +1,7 @@
 ﻿using GraphQL.Language.AST;
 using Newtonsoft.Json;
 using OSIsoft.AF.Asset;
+using PiGraphQlOwinServer.GraphQl;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -29,24 +30,22 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if(afElementsField!=null)
             {
 
-                Field afElementsChildField = afElementsField.SelectionSet.Children.FirstOrDefault(x => (x as Field).Name == "afElements") as Field;
-                Field afAttributesChildField = afElementsField.SelectionSet.Children.FirstOrDefault(x => (x as Field).Name == "afAttributes") as Field;
+                var afElementsNameFilterStrings = GraphQlHelpers.GetArgument(afElementsField, "nameFilter");
+                var afElementsChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afElements");
+                var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afAttributes");
 
-                var nameFilterArgument = afElementsField.Arguments.FirstOrDefault(x => x.Name == "nameFilter");
-                List<object> nameFilterStrings = nameFilterArgument != null ? nameFilterArgument.Value.Value as List<object> : new List<object>();
-
-                ConcurrentBag<GraphQlAfElement> returnObject = new ConcurrentBag<GraphQlAfElement>();
+                var returnObject = new ConcurrentBag<GraphQlAfElement>();
 
                 List<AFElement> afElementList = aAfElementTemplate.FindInstantiatedElements(true, OSIsoft.AF.AFSortField.Name, OSIsoft.AF.AFSortOrder.Ascending, 10000).Select(x => x as AFElement).Where(x => x != null).ToList();
                 Parallel.ForEach(afElementList, aAfElement =>
                 {
-                    if (nameFilterStrings.Count == 0 || nameFilterStrings.Contains(aAfElement.Name))
+                    if (afElementsNameFilterStrings.Count == 0 || afElementsNameFilterStrings.Contains(aAfElement.Name))
                     {
                         returnObject.Add(new GraphQlAfElement(aAfElement, afElementsChildField, afAttributesChildField));
                     }
                 });
 
-                afElements = returnObject.ToList();
+                afElements = returnObject.OrderBy(x=>x.name).ToList();
             }
         }
 
