@@ -76,6 +76,10 @@ The dedicatedPiSystem attribute lets you specify the name of a "default" PI Syst
 }
 ~~~
 
+## Authentication
+
+This project uses a basic authentication header value to create a System.Net.NetworkCredential to access the PI System. Simply add an Authoriaztion header with the value "Basic abcd1234efgh", where abcd1234efgh is Base64 of domain\username:password.
+
 ## GraphQL Schema
 
 It is not the goal of this project to replicate the extensive scopes of awesome functionality of the PI WebAPI or the AF .NET SDK. The schema includes the following simplified types and entrance queries:
