@@ -38,7 +38,7 @@ using (Microsoft.Owin.Hosting.WebApp.Start<Startup>(baseUrl))
 }
 ~~~
 
-The dedicatedPiSystem attribute lets you specify the name of a "default" PI System - good thing to use if there is only one. This allows you to conviniently query for piSystem without specifying a name parameter.
+The dedicatedPiSystem attribute lets you specify the name of a "default" PI System - good thing to use if there is only one. This allows you to conviniently query for piSystem without specifying a name parameter:
 
 ~~~GraphQL
 {
