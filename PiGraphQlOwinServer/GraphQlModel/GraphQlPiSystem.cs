@@ -1,5 +1,6 @@
 ﻿using GraphQL.Language.AST;
 using OSIsoft.AF;
+using PiGraphQlOwinServer.GraphQl;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,12 +28,11 @@ namespace PiGraphQlOwinServer.GraphQlModel
             ThisPiSystem = aPiSystem;
             if (afDbsField != null)
             {
-                var nameFilterArgument = afDbsField.Arguments.FirstOrDefault(x => x.Name == "nameFilter");
-                List<object> nameFilterStrings = nameFilterArgument != null ? nameFilterArgument.Value.Value as List<object> : new List<object>();
-                
-                Field afElementsField = afDbsField.SelectionSet.Children.FirstOrDefault(x => (x as Field).Name == "afElements") as Field;
 
-                ConcurrentBag<GraphQlAfDatabase> returnElementsObject = new ConcurrentBag<GraphQlAfDatabase>();
+                var nameFilterStrings = GraphQlHelpers.GetArgument(afDbsField, "nameFilter");
+                var afElementsField = GraphQlHelpers.GetFieldFromSelectionSet(afDbsField, "afElements");
+
+                var returnElementsObject = new ConcurrentBag<GraphQlAfDatabase>();
                 var afDbsList = aPiSystem.Databases;
                 Parallel.ForEach(afDbsList, aAfDb =>
                 {

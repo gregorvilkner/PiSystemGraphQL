@@ -3,10 +3,12 @@ using GraphQL.Language.AST;
 using GraphQL.Types;
 using OSIsoft.AF;
 using OSIsoft.AF.Asset;
+using PiGraphQlOwinServer.GraphQl;
 using PiGraphQlOwinServer.GraphQlModel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -71,9 +73,22 @@ namespace PiGraphNetCoreServer.GraphQl
         [GraphQLMetadata("piSystem")]
         public GraphQlPiSystem GetPiSystem(ResolveFieldContext context, string name)
         {
+            if(name==null)
+            {
+                string aDedicatedPiSystemName= ConfigurationManager.AppSettings["dedicatedPiSystem"];
+                if(aDedicatedPiSystemName=="")
+                {
+                    context.Errors.Add(new ExecutionError($"No PISystem specified."));
+                    return null;
+                }
+                else
+                {
+                    name = aDedicatedPiSystemName;
+                }
+            }
             if (attemptLogin(context, name))
             {
-                Field afDbsField = context.SubFields.FirstOrDefault(x => x.Key == "afDbs").Value as Field;
+                var afDbsField = GraphQlHelpers.GetFieldFromContext(context, "afDbs");
                 return new GraphQlPiSystem(aPiSystem, afDbsField);
             }
             else
@@ -89,11 +104,11 @@ namespace PiGraphNetCoreServer.GraphQl
             aAfDatabasePath = cleanupPath(aAfDatabasePath);
             if (attemptLogin(context, getPiSystemName(aAfDatabasePath)))
             {
-                AFDatabase aAfDb = AFDatabase.FindObject(aAfDatabasePath) as AFDatabase;
+                var aAfDb = AFDatabase.FindObject(aAfDatabasePath) as AFDatabase;
 
-                Field afElementsField = context.SubFields.FirstOrDefault(x => x.Key == "afElements").Value as Field;
+                var afElementsField = GraphQlHelpers.GetFieldFromContext(context, "afElements");
                 
-                GraphQlAfDatabase aGraphQlAfDatabase = new GraphQlAfDatabase(aAfDb, afElementsField);
+                var aGraphQlAfDatabase = new GraphQlAfDatabase(aAfDb, afElementsField);
 
                 return aGraphQlAfDatabase;
             }
@@ -118,10 +133,10 @@ namespace PiGraphNetCoreServer.GraphQl
                 }
                 else
                 {
-                    AFElement aAfElement = aAfElementSearch.First() as AFElement;
-                    Field afElementsField = context.SubFields.FirstOrDefault(x => x.Key == "afElements").Value as Field;
-                    Field afAttributesField = context.SubFields.FirstOrDefault(x => x.Key == "afAttributes").Value as Field;
-                    GraphQlAfElement graphQlAfElement = new GraphQlAfElement(aAfElement, afElementsField, afAttributesField);
+                    var aAfElement = aAfElementSearch.First() as AFElement;
+                    var afElementsField = GraphQlHelpers.GetFieldFromContext(context, "afElements");
+                    var afAttributesField = GraphQlHelpers.GetFieldFromContext(context, "afAttributes");
+                    var graphQlAfElement = new GraphQlAfElement(aAfElement, afElementsField, afAttributesField);
                     return graphQlAfElement;
                 }
             }
@@ -135,26 +150,26 @@ namespace PiGraphNetCoreServer.GraphQl
         public List<GraphQlAfElementTemplate> GetAfElementTemplates(ResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null)
         {
             aAfDatabasePath = cleanupPath(aAfDatabasePath);
-            ConcurrentBag<GraphQlAfElementTemplate> returnObject = new ConcurrentBag<GraphQlAfElementTemplate>();
             if (attemptLogin(context, getPiSystemName(aAfDatabasePath)))
             {
-                AFDatabase aAfDb = AFDatabase.FindObject(aAfDatabasePath) as AFDatabase;
+                var aAfDb = AFDatabase.FindObject(aAfDatabasePath) as AFDatabase;
                 if (aAfDb == null)
                 {
                     context.Errors.Add(new ExecutionError($"AFDatabase not found."));
                     return null;
                 }
 
-                var aAfElementTemplateList = aAfDb.ElementTemplates;
-                Field afElementsField = context.SubFields.ContainsKey("afElements") ? context.SubFields["afElements"] : null;
-                List<string> nameFilterStrings = nameFilter != null ? nameFilter.ToList() : new List<string>();
+                var nameFilterStrings = nameFilter != null ? nameFilter.ToList() : new List<string>();
+                var afElementsField = GraphQlHelpers.GetFieldFromContext(context, "afElements");
+                
+                var returnObject = new ConcurrentBag<GraphQlAfElementTemplate>();
 
-                //foreach (var aAfElement in aAfElementList)
+                var aAfElementTemplateList = aAfDb.ElementTemplates;
                 Parallel.ForEach(aAfElementTemplateList, aAfElementTemplate =>
                 {
                     if (nameFilterStrings.Count == 0 || nameFilterStrings.Contains(aAfElementTemplate.Name))
                     {
-                        GraphQlAfElementTemplate graphQlAfElementTemplate = new GraphQlAfElementTemplate(aAfElementTemplate, afElementsField);
+                        var graphQlAfElementTemplate = new GraphQlAfElementTemplate(aAfElementTemplate, afElementsField);
                         returnObject.Add(graphQlAfElementTemplate);
                     }
                 });

@@ -50,7 +50,7 @@ namespace PiGraphNetCoreServer.GraphQl
             }
 
             type Query {
-                piSystem(name: String!): GraphQlPiSystem
+                piSystem(name: String): GraphQlPiSystem
                 afDatabase(aAfDatabasePath : String!): GraphQlAfDatabase
                 afElement(aAfElementPath: String!): GraphQlAfElement
                 afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [GraphQlAfElementTemplate]
