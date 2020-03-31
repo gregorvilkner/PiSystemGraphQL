@@ -75,3 +75,71 @@ The dedicatedPiSystem attribute lets you specify the name of a "default" PI Syst
   }
 }
 ~~~
+
+## GraphQL Schema
+
+It is not the goal of this project to replicate the extensive scopes of awesome functionality of the PI WebAPI or the AF .NET SDK. The schema includes the following simplified types and entrance queries:
+
+### piSystem
+
+~~~GraphQL
+type GraphQlPiSystem {
+  name: String,
+  afDbs(nameFilter: [String]): [GraphQlAfDatabase]
+}
+~~~
+
+### afDatabase
+
+~~~GraphQL
+type GraphQlAfDatabase {
+  name: String,
+  path: String,
+  afElements(nameFilter: [String]): [GraphQlAfElement]
+}
+~~~
+
+### afElement
+
+~~~GraphQL
+type GraphQlAfElement {
+  name: String,
+  path: String,
+  template: String,
+  afElements(nameFilter: [String]): [GraphQlAfElement],
+  afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
+}
+~~~
+
+### afElementTemplate
+
+~~~GraphQL
+type GraphQlAfElementTemplate {
+  name: String,
+  afElements(nameFilter: [String]): [GraphQlAfElement],
+}
+~~~
+
+### afAttribute
+
+~~~GraphQL
+type GraphQlAfAttribute {
+  name: String,
+  value: String,
+  timeStamp: String,
+  uom: String,
+  afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
+}
+~~~
+
+### Queryies (yes, there's a Hello World in there...)
+
+~~~GraphQL
+type Query {
+  piSystem(name: String): GraphQlPiSystem
+  afDatabase(aAfDatabasePath : String!): GraphQlAfDatabase
+  afElement(aAfElementPath: String!): GraphQlAfElement
+  afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [GraphQlAfElementTemplate]
+  hello: String
+}
+~~~
