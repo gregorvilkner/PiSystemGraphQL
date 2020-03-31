@@ -28,13 +28,28 @@ There's a small appSettings section in the App.config file to take note of:
 
 The baseUrl is straight forward - whatever you want to use on your server. Both, http and https, work.
 
-This project uses:
+This project simply uses:
 
 ~~~C#
 using (Microsoft.Owin.Hosting.WebApp.Start<Startup>(baseUrl))
 {
   Process.Start(baseUrl);
   Console.ReadKey();
+}
+
+with:
+
+class Startup
+{
+  public void Configuration(IAppBuilder app)
+  {
+    app.Map("/api", builder =>
+    {
+        HttpConfiguration config = new HttpConfiguration();
+        config.MapHttpAttributeRoutes();
+        app.UseWebApi(config);
+    });
+  }
 }
 ~~~
 
