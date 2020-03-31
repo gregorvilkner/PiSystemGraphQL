@@ -24,7 +24,7 @@ namespace PiGraphQlOwinServer.api
             KeyValuePair<string, IEnumerable<string>> authHeaders = headers.FirstOrDefault(valuePair => valuePair.Key == "Authorization");
             if (authHeaders.Value == null)
             {
-                return BadRequest("Authorization header is required.");
+                return BadRequest("Authorization header is required!");
             }
             else
             {
