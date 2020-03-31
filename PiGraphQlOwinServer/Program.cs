@@ -11,7 +11,7 @@ namespace PiGraphQlOwinServer
         {
 
             //https://medium.com/@kirkbackus/owin-access-is-denied-errors-fd9d370aa8d3
-            //string baseUrl = "https://*:9090"; // webserver running on port 9090
+            //string baseUrl = "http://*:9090"; // webserver running on port 9090
             string baseUrl = "https://*:9091/"; // webserver running on port 9090
             using (WebApp.Start<Startup>(baseUrl))
             {
