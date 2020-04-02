@@ -141,9 +141,9 @@ type GraphQlAfAttribute {
 ~~~GraphQL
 type Query {
   piSystem(name: String): GraphQlPiSystem
-  afDatabase(aAfDatabasePath : String!): GraphQlAfDatabase
+  afDatabase(aAfDatabasePath: String!): GraphQlAfDatabase
   afElement(aAfElementPath: String!): GraphQlAfElement
-  afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [GraphQlAfElementTemplate]
+  afElementTemplates(aAfDatabasePath: String!, nameFilter: [String]): [GraphQlAfElementTemplate]
   hello: String
 }
 ~~~
