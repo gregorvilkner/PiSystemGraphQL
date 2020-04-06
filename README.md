@@ -131,6 +131,35 @@ We encounter the need for this, because we often name afElements with GUIDs to a
 }
 ~~~
 
+## Usage: Retrieving Time Series Data
+
+### tsPlotValues
+
+This works like one would expect: we use the plot() functionality of AF and retrieve time series values between a given start and end datetime string. The AF SDK does a solid good job parsing lots of string formats to convert to a DateTime value. Also, "-1w" and "*", for "one week ago" and "right now", works. Keep in mind that anything DateTime in this project is refering to UTC. The plotDensity parameter has been the stuff of controversy and a bit of dark magic for decades:
+
+- larger than 0: returns a pretty plot. Values around 100-200 work pretty well.
+- equal to 0: returns all values in the archive. Use with care for large timespans.
+- smaller than 0: returns interpolated values for exactly that many equal spaced time spans.
+
+For instance:
+
+~~~GraphQL
+{
+  ...
+  ...
+  afAttributes (nameFilter: ["kW", "kWh"]){
+    name, value, timeStamp
+    tsPlotValues (startDateTime: "-1w", endDateTime: "*", plotDensity: 100){
+      timeStamp
+      value
+    }
+  }
+}
+~~~
+
+### tsAggregateValues
+
+This should be next on the list of functionality to be added. It's slicing a given timeSpan into a number of pieces, for instance hourly for the last week, and returning min, max, avg, sum (event based), sum (time based). Straight forward...
 
 ## GraphQL Schema
 
