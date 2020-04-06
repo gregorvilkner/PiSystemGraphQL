@@ -8,11 +8,11 @@ Here's what's in the box:
 
 - a self-host owin console app that wants to run on the server and eats the AF .NET SDK 4.0 and .NET Framework 4.7
 - requires basic auth in the request header from the client side and builds a System.Net.NetworkCredential to access the PI System
-- the GraphQL object model includes piSystem, afDatabase, afElement, afAttribute, afElementTemplate
+- the GraphQL object model includes piSystem, afDatabase, afElement, afAttribute, piTsValue, afElementTemplate
 - entrance points include: piSystem(name), afDatabase(path), afElement(path), afElementTemplates(afDb path, names)
-- once your past your entrance point you can recursively traverse the AF model anywhere you want
-- limitations: for now it's totally read-only. primary use case include dashboards and etl jobs
-- limitations: for now it gets afAttribute snapshot values, no timeseries data yet
+- once you're past your entrance point you can recursively traverse the AF model anywhere you want incl. attribute values, snapshot values, timestamps, and time series data (pretty plot, all values, equal distance interpolated values between start and end datetime)
+- limitations: all datetime values are UTC. no time zones here. no daylight savings here. time to grow up...
+- limitations: access to a PI System using this codebase is read-only. primary use cases include dashboards and etl jobs
 
 ## App Settings
 
@@ -66,7 +66,6 @@ The dedicatedPiSystem attribute lets you specify the name of a "default" PI Syst
 }
 <<vs.>>
 {
-  {
   piSystem (name: "myPisystemName"){
     name
     afDbs{
@@ -80,9 +79,62 @@ The dedicatedPiSystem attribute lets you specify the name of a "default" PI Syst
 
 This project uses a basic authentication header value to create a System.Net.NetworkCredential to access the PI System. Simply add an Authorization header with the value "Basic abcd1234efgh", where abcd1234efgh is Base64 of domain\username:password.
 
+## Usage: Using Filters to Limit the Scope of Traversal
+
+The need for filters becomes apparent fairly quickly. One can describe traversals many levels into the hirarchy of an AF Database - and completely crawling through all elements and attributes would be unneccessary. To be more specific about the scope of a traversal, we use filters.
+
+### nameFilter
+
+NameFilters are provided as arrays of strings. The nameFilter feature is available for afDataBases, afElementTemplates, afElements, and afAttributes. A few examples:
+
+~~~GraphQL
+// limit USA assets by state (MA, TX, FL) and retrieve Generators' runtime and fuelLevel attributes
+{
+  afElement (aAfElementPath: "\\\\myPisystemName\\afmodel1\\USA"){
+    name
+    afElements (nameFilter: ["MA", "TX", "FL"]){
+      name
+      afElements (nameFilter: ["Generators"]){
+        afElements {
+          name
+          afAttributes (nameFilter: ["runtime", "fuelLevel"]){
+            name
+            value
+            timeStamp
+            uof
+          }
+        }
+      }
+    }
+  }
+}
+~~~
+
+### attributeValueFilter
+
+We encounter the need for this, because we often name afElements with GUIDs to allow duplicate asset names. Asset names are then burried in attributes. To filter for elements by attribute values we use attributeValueFilter, as array of strings, in the format attributeName=value. For instance:
+
+~~~GraphQL
+// retrieve Generators by template and by manufacturer attribute
+{
+  afElementTemplates (aAfDatabasePath: "\\\\myPisystemName\\afmodel1", nameFilter: ["Generator"]){
+    afElements (attributeValueFilter: ["manufacturer=Caterpillar"]){
+      name
+      afAttributes (nameFilter: ["runtime", "fuelLevel"]){
+        name
+        value
+        timeStamp
+        uof
+      }
+    }
+  }
+}
+~~~
+
+
 ## GraphQL Schema
 
-It is not the goal of this project to replicate the extensive scopes of awesome functionality of the PI WebAPI or the AF .NET SDK. The schema includes the following simplified types and entrance queries:
+It is not the goal of this project to replicate the extensive scopes and awesome functionality of the PI WebAPI or the AF .NET SDK. The schema includes the following simplified types and entrance queries:
 
 ### piSystem
 
@@ -99,7 +151,7 @@ type GraphQlPiSystem {
 type GraphQlAfDatabase {
   name: String,
   path: String,
-  afElements(nameFilter: [String]): [GraphQlAfElement]
+  afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement]
 }
 ~~~
 
@@ -110,7 +162,7 @@ type GraphQlAfElement {
   name: String,
   path: String,
   template: String,
-  afElements(nameFilter: [String]): [GraphQlAfElement],
+  afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
   afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
 }
 ~~~
@@ -120,7 +172,7 @@ type GraphQlAfElement {
 ~~~GraphQL
 type GraphQlAfElementTemplate {
   name: String,
-  afElements(nameFilter: [String]): [GraphQlAfElement],
+  afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
 }
 ~~~
 
@@ -132,7 +184,17 @@ type GraphQlAfAttribute {
   value: String,
   timeStamp: String,
   uom: String,
-  afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
+  afAttributes(nameFilter: [String]): [GraphQlAfAttribute],
+  tsPlotValues(startDateTime: String, endDateTime: String, plotDensity: Int): [GraphQlTsValue]
+}
+~~~
+
+### afTsValue
+
+~~~GraphQL
+type GraphQlTsValue {
+  timeStamp: String,
+  value: String
 }
 ~~~
 
