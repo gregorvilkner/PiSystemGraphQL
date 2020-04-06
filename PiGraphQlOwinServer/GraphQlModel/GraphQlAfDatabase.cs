@@ -1,6 +1,7 @@
 ﻿using GraphQL.Language.AST;
 using Newtonsoft.Json;
 using OSIsoft.AF;
+using OSIsoft.AF.Asset;
 using PiGraphQlOwinServer.GraphQl;
 using System;
 using System.Collections.Concurrent;
@@ -36,7 +37,9 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if (afElementsField != null)
             {
 
-                var afElementsNameFilterStrings = GraphQlHelpers.GetArgument(afElementsField, "nameFilter");
+                var afElementsNameFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "nameFilter");
+                var afElementsAttributeValueFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "attributeValueFilter");
+
                 var afElementsChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afElements");
                 var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afAttributes");
 
@@ -44,7 +47,7 @@ namespace PiGraphQlOwinServer.GraphQlModel
                 var afElementList = aAfDatabase.Elements;
                 Parallel.ForEach(afElementList, aAfChildElement =>
                 {
-                    if (afElementsNameFilterStrings.Count == 0 || afElementsNameFilterStrings.Contains(aAfChildElement.Name))
+                    if (GraphQlHelpers.JudgeElementOnFilters(aAfChildElement, afElementsNameFilterStrings, afElementsAttributeValueFilterStrings))
                     {
                         returnElementsObject.Add(new GraphQlAfElement(aAfChildElement, afElementsChildField, afAttributesChildField));
                     }

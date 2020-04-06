@@ -30,18 +30,20 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if(afElementsField!=null)
             {
 
-                var afElementsNameFilterStrings = GraphQlHelpers.GetArgument(afElementsField, "nameFilter");
+                var afElementsNameFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "nameFilter");
+                var afElementsAttributeValueFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "attributeValueFilter");
+
                 var afElementsChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afElements");
                 var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afAttributes");
 
                 var returnObject = new ConcurrentBag<GraphQlAfElement>();
 
                 List<AFElement> afElementList = aAfElementTemplate.FindInstantiatedElements(true, OSIsoft.AF.AFSortField.Name, OSIsoft.AF.AFSortOrder.Ascending, 10000).Select(x => x as AFElement).Where(x => x != null).ToList();
-                Parallel.ForEach(afElementList, aAfElement =>
+                Parallel.ForEach(afElementList, aAfChildElement =>
                 {
-                    if (afElementsNameFilterStrings.Count == 0 || afElementsNameFilterStrings.Contains(aAfElement.Name))
+                    if (GraphQlHelpers.JudgeElementOnFilters(aAfChildElement, afElementsNameFilterStrings, afElementsAttributeValueFilterStrings))
                     {
-                        returnObject.Add(new GraphQlAfElement(aAfElement, afElementsChildField, afAttributesChildField));
+                        returnObject.Add(new GraphQlAfElement(aAfChildElement, afElementsChildField, afAttributesChildField));
                     }
                 });
 

@@ -29,7 +29,7 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if (afDbsField != null)
             {
 
-                var nameFilterStrings = GraphQlHelpers.GetArgument(afDbsField, "nameFilter");
+                var nameFilterStrings = GraphQlHelpers.GetArgumentStrings(afDbsField, "nameFilter");
                 var afElementsField = GraphQlHelpers.GetFieldFromSelectionSet(afDbsField, "afElements");
 
                 var returnElementsObject = new ConcurrentBag<GraphQlAfDatabase>();
