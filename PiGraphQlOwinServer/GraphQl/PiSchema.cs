@@ -25,20 +25,20 @@ namespace PiGraphNetCoreServer.GraphQl
             type GraphQlAfDatabase {
                 name: String,
                 path: String,
-                afElements(nameFilter: [String]): [GraphQlAfElement]
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement]
             }
 
             type GraphQlAfElement {
                 name: String,
                 path: String,
                 template: String,
-                afElements(nameFilter: [String]): [GraphQlAfElement],
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
                 afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
             }
 
             type GraphQlAfElementTemplate {
                 name: String,
-                afElements(nameFilter: [String]): [GraphQlAfElement],
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
             }
 
             type GraphQlAfAttribute {
@@ -46,7 +46,13 @@ namespace PiGraphNetCoreServer.GraphQl
                 value: String,
                 timeStamp: String,
                 uom: String,
-                afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
+                afAttributes(nameFilter: [String]): [GraphQlAfAttribute],
+                tsPlotValues(startDateTime: String, endDateTime: String, plotDensity: Int): [GraphQlTsValue]
+            }
+
+            type GraphQlTsValue {
+                timeStamp: String,
+                value: String
             }
 
             type Query {

@@ -36,7 +36,8 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if (afElementsField != null)
             {
 
-                var afElementsNameFilterStrings = GraphQlHelpers.GetArgument(afElementsField, "nameFilter");
+                var afElementsNameFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "nameFilter");
+                var afElementsAttributeValueFilterStrings = GraphQlHelpers.GetArgumentStrings(afElementsField, "attributeValueFilter");
                 var afElementsChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afElements");
                 var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afElementsField, "afAttributes");
 
@@ -44,7 +45,7 @@ namespace PiGraphQlOwinServer.GraphQlModel
                 var afElementList = aAfElement.Elements;
                 Parallel.ForEach(afElementList, aAfChildElement =>
                 {
-                    if (afElementsNameFilterStrings.Count == 0 || afElementsNameFilterStrings.Contains(aAfChildElement.Name))
+                    if (GraphQlHelpers.JudgeElementOnFilters(aAfChildElement, afElementsNameFilterStrings, afElementsAttributeValueFilterStrings))
                     {
                         returnElementsObject.Add(new GraphQlAfElement(aAfChildElement, afElementsChildField, afAttributesChildField));
                     }
@@ -55,8 +56,9 @@ namespace PiGraphQlOwinServer.GraphQlModel
             if (afAttributesField != null)
             {
 
-                var afAttributesNameFilterStrings = GraphQlHelpers.GetArgument(afAttributesField, "nameFilter");
+                var afAttributesNameFilterStrings = GraphQlHelpers.GetArgumentStrings(afAttributesField, "nameFilter");
                 var afAttributesChildField = GraphQlHelpers.GetFieldFromSelectionSet(afAttributesField, "afAttributes");
+                var tsValuesField= GraphQlHelpers.GetFieldFromSelectionSet(afAttributesField, "tsPlotValues");
 
                 var returnAttributesObject = new ConcurrentBag<GraphQlAfAttribute>();
                 var afAttributeList = aAfElement.Attributes.ToList<AFAttribute>();
@@ -64,7 +66,7 @@ namespace PiGraphQlOwinServer.GraphQlModel
                 {
                     if (afAttributesNameFilterStrings.Count == 0 || afAttributesNameFilterStrings.Contains(aAfAttribute.Name))
                     {
-                        returnAttributesObject.Add(new GraphQlAfAttribute(aAfAttribute, afAttributesChildField));
+                        returnAttributesObject.Add(new GraphQlAfAttribute(aAfAttribute, afAttributesChildField, tsValuesField));
                     }
                 });
                 afAttributes = returnAttributesObject.OrderBy(x=>x.name).ToList();

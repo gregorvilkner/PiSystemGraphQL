@@ -133,6 +133,7 @@
     <Compile Include="GraphQlModel\GraphQlAfElementTemplate.cs" />
     <Compile Include="GraphQlModel\GraphQlAfElement.cs" />
     <Compile Include="GraphQlModel\GraphQlPiSystem.cs" />
+    <Compile Include="GraphQlModel\GraphQlTsValue.cs" />
     <Compile Include="GraphQl\GraphQlHelpers.cs" />
     <Compile Include="GraphQl\GraphQLQuery.cs" />
     <Compile Include="GraphQl\PiSchema.cs" />
