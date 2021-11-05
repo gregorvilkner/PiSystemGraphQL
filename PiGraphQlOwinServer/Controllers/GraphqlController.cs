@@ -20,33 +20,33 @@ namespace PiGraphQlOwinServer.api
         {
             var start = DateTime.UtcNow;
 
-            var headers = Request.Headers;
-            KeyValuePair<string, IEnumerable<string>> authHeaders = headers.FirstOrDefault(valuePair => valuePair.Key == "Authorization");
-            if (authHeaders.Value == null)
-            {
-                return BadRequest("Authorization header is required!");
-            }
-            else
-            {
-                string username;
-                string password;
-                string domain;
-                try
-                {
-                    var headerString = authHeaders.Value.FirstOrDefault();
-                    var credentials = headerString.Split()[1];
-                    var decoded = Convert.FromBase64String(credentials);
-                    var abc = Encoding.UTF8.GetString(decoded);
+            //var headers = Request.Headers;
+            //KeyValuePair<string, IEnumerable<string>> authHeaders = headers.FirstOrDefault(valuePair => valuePair.Key == "Authorization");
+            //if (authHeaders.Value == null)
+            //{
+            //    return BadRequest("Authorization header is required!");
+            //}
+            //else
+            //{
+            //    string username;
+            //    string password;
+            //    string domain;
+                //try
+                //{
+                //    var headerString = authHeaders.Value.FirstOrDefault();
+                //    var credentials = headerString.Split()[1];
+                //    var decoded = Convert.FromBase64String(credentials);
+                //    var abc = Encoding.UTF8.GetString(decoded);
 
-                    var domainusername = abc.Split(':')[0];
-                    domain = domainusername.Split('\\')[0];
-                    username = domainusername.Split('\\')[1];
-                    password = abc.Split(':')[1];
-                }
-                catch
-                {
-                    return BadRequest("Error parsing Authorization header.");
-                }
+                //    var domainusername = abc.Split(':')[0];
+                //    domain = domainusername.Split('\\')[0];
+                //    username = domainusername.Split('\\')[1];
+                //    password = abc.Split(':')[1];
+                //}
+                //catch
+                //{
+                //    return BadRequest("Error parsing Authorization header.");
+                //}
 
                 var schema = new PiSchema();
                 var inputs = query.Variables.ToInputs();
@@ -57,7 +57,7 @@ namespace PiGraphQlOwinServer.api
                     _.Query = query.Query;
                     _.OperationName = query.OperationName;
                     _.Inputs = inputs;
-                    _.UserContext = new NetworkCredential(username, password, domain);
+                    //_.UserContext = new NetworkCredential(username, password, domain);
                     _.ExposeExceptions = true;
                     _.EnableMetrics = true;
                 });
@@ -73,7 +73,8 @@ namespace PiGraphQlOwinServer.api
                 return Ok(result);
             }
 
-        }
+        //}
+
 
     }
 }
