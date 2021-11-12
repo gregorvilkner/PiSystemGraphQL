@@ -8,7 +8,7 @@ namespace PiGraphQlSchema.GraphQlModel
 
         public string path { get; set; }
 
-        public List<QLAfElement> qlAfElements { get; set; }
+        public List<QLAfElement> afElements { get; set; }
 
 
 

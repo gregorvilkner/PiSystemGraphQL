@@ -9,7 +9,7 @@ namespace PiGraphQlSchema.GraphQlModel
         public string timeStamp { get; set; }
         public string uom { get; set; }
 
-        public List<QLAfAttribute> qlAfAttributes { get; set; }
+        public List<QLAfAttribute> afAttributes { get; set; }
         
         public List<QLTsValue> tsPlotValues { get; set; }
 

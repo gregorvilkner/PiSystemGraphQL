@@ -6,11 +6,11 @@ namespace PiGraphQlSchema.IGraphQl
 {
     public interface IQuery
     {
-        
+        [GraphQLMetadata("hello")]
         string GetHello();
 
         [GraphQLMetadata("piSystem")]
-        QLPiSystem GetPiSystem(ResolveFieldContext context, string name);
+        QLPiSystem GetPiSystem(IResolveFieldContext context);
 
         [GraphQLMetadata("afDatabase")]
         QLAfDatabase GetAfDatabase(ResolveFieldContext context, string aAfDatabasePath);
@@ -20,6 +20,7 @@ namespace PiGraphQlSchema.IGraphQl
 
         [GraphQLMetadata("afElementTemplates")]
         List<QLAfElementTemplate> GetAfElementTemplates(ResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null);
+
 
     }
 }

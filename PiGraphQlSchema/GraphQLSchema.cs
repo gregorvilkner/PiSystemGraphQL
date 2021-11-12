@@ -4,49 +4,49 @@
     {
         public static readonly string schema = @"
             
-            type GraphQlPiSystem {
+            type QLPiSystem {
                 name: String,
-                afDbs(nameFilter: [String]): [GraphQlAfDatabase]
+                afDbs(nameFilter: [String]): [QLAfDatabase]
             }
 
-            type GraphQlAfDatabase {
+            type QLAfDatabase {
                 name: String,
                 path: String,
-                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement]
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [QLAfElement]
             }
 
-            type GraphQlAfElement {
+            type QLAfElement {
                 name: String,
                 path: String,
                 template: String,
-                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
-                afAttributes(nameFilter: [String]): [GraphQlAfAttribute]
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [QLAfElement],
+                afAttributes(nameFilter: [String]): [QLAfAttribute]
             }
 
-            type GraphQlAfElementTemplate {
+            type QLAfElementTemplate {
                 name: String,
-                afElements(nameFilter: [String], attributeValueFilter: [String]): [GraphQlAfElement],
+                afElements(nameFilter: [String], attributeValueFilter: [String]): [QLAfElement],
             }
 
-            type GraphQlAfAttribute {
+            type QLAfAttribute {
                 name: String,
                 value: String,
                 timeStamp: String,
                 uom: String,
-                afAttributes(nameFilter: [String]): [GraphQlAfAttribute],
-                tsPlotValues(startDateTime: String, endDateTime: String, plotDensity: Int): [GraphQlTsValue]
+                afAttributes(nameFilter: [String]): [QLAfAttribute],
+                tsPlotValues(startDateTime: String, endDateTime: String, plotDensity: Int): [QLTsValue]
             }
 
-            type GraphQlTsValue {
+            type QLTsValue {
                 timeStamp: String,
                 value: String
             }
 
             type Query {
-                piSystem(name: String): GraphQlPiSystem
-                afDatabase(aAfDatabasePath : String!): GraphQlAfDatabase
-                afElement(aAfElementPath: String!): GraphQlAfElement
-                afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [GraphQlAfElementTemplate]
+                piSystem(name: String): QLPiSystem
+                afDatabase(aAfDatabasePath : String!): QLAfDatabase
+                afElement(aAfElementPath: String!): QLAfElement
+                afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [QLAfElementTemplate]
                 hello: String
             }
 

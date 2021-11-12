@@ -6,7 +6,7 @@ namespace PiGraphQlSchema.GraphQlModel
     {
         public string name { get; set; }
 
-        public List<QLAfDatabase> qlAfDbs { get; set; }
+        public List<QLAfDatabase> afDbs { get; set; }
 
     }
 }
