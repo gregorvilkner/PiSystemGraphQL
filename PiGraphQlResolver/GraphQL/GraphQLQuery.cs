@@ -1,7 +1,6 @@
-﻿using GraphQL.SystemTextJson;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using GraphQL.SystemTextJson;
 
 namespace PiGraphQlResolver.GraphQL
 {
@@ -13,7 +12,7 @@ namespace PiGraphQlResolver.GraphQL
 
 
         // https://fiyazhasan.me/graphql-with-net-core-part-v-fields-arguments-variables/
-        [JsonConverter(typeof(InputsConverter))]
+        [JsonConverter(typeof(ObjectDictionaryConverter))]
         //[JsonConverter(typeof(ObjectDictionaryConverter))]
         public Dictionary<string, object> Variables
         {

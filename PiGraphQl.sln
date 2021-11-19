@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiGraphQlResolver", "PiGrap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiGraphQlResolverTestConsoleApp", "PiGraphQlResolverTestConsoleApp\PiGraphQlResolverTestConsoleApp.csproj", "{92CAD412-89E1-492E-A940-981AB59966A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiGraphQlDesktopClient", "PiGraphQlDesktopClient\PiGraphQlDesktopClient.csproj", "{0CEB0934-EA8D-4574-A684-D3CCEF7D7082}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "active-directory-b2c-wpf", "active-directory-b2c-wpf\active-directory-b2c-wpf.csproj", "{9A4269AF-7862-482C-A9FC-98D3542C4129}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{92CAD412-89E1-492E-A940-981AB59966A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92CAD412-89E1-492E-A940-981AB59966A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92CAD412-89E1-492E-A940-981AB59966A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CEB0934-EA8D-4574-A684-D3CCEF7D7082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CEB0934-EA8D-4574-A684-D3CCEF7D7082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CEB0934-EA8D-4574-A684-D3CCEF7D7082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CEB0934-EA8D-4574-A684-D3CCEF7D7082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4269AF-7862-482C-A9FC-98D3542C4129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4269AF-7862-482C-A9FC-98D3542C4129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4269AF-7862-482C-A9FC-98D3542C4129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4269AF-7862-482C-A9FC-98D3542C4129}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

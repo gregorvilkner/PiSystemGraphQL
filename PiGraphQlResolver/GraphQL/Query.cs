@@ -33,7 +33,9 @@ namespace PiGraphQlResolver.GraphQL
             var afDbsField = GraphQlHelpers.GetFieldFromFieldOrContext(context, "afDbs");
             return new QLPiSystemResolve(ResolverEntry.aPiSystem, afDbsField);
         }
-        public QLAfDatabase GetAfDatabase(ResolveFieldContext context, string aAfDatabasePath)
+
+        [GraphQLMetadata("afDatabase")]
+        public QLAfDatabase GetAfDatabase(IResolveFieldContext context, string aAfDatabasePath)
         {
             aAfDatabasePath = cleanupPath(aAfDatabasePath);
 
@@ -46,7 +48,8 @@ namespace PiGraphQlResolver.GraphQL
             return aGraphQlAfDatabase;
         }
 
-        public QLAfElement GetAfElementByPath(ResolveFieldContext context, string aAfElementPath)
+        [GraphQLMetadata("afElement")]
+        public QLAfElement GetAfElementByPath(IResolveFieldContext context, string aAfElementPath)
         {
             aAfElementPath = cleanupPath(aAfElementPath);
             var aAfElementSearch = AFElement.FindElementsByPath(new string[] { aAfElementPath }, null);
@@ -65,7 +68,8 @@ namespace PiGraphQlResolver.GraphQL
             }
         }
 
-        public List<QLAfElementTemplate> GetAfElementTemplates(ResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null)
+        [GraphQLMetadata("afElementTemplates")]
+        public List<QLAfElementTemplate> GetAfElementTemplates(IResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null)
         {
             aAfDatabasePath = cleanupPath(aAfDatabasePath);
             var aAfDb = AFDatabase.FindObject(aAfDatabasePath) as AFDatabase;

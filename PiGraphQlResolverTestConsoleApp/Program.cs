@@ -45,7 +45,15 @@ namespace PiGraphQlResolverTestConsoleApp
                 }
             }
             ";
-            string graphQlQueryJsonString = $@"{{""query"": {JsonConvert.SerializeObject(query)}}}";
+            string query2 = @"
+            {
+                afElementTemplates(aAfDatabasePath:""\\\\DESKTOP-GV\\GV_001""){
+                    name
+                }
+            }
+
+            ";
+            string graphQlQueryJsonString = $@"{{""query"": {JsonConvert.SerializeObject(query2)}}}";
 
             GraphQLQuery graphQLQuery = JsonConvert.DeserializeObject<GraphQLQuery>(graphQlQueryJsonString);
             var result = await aEntry.GetResultAsync(graphQLQuery);

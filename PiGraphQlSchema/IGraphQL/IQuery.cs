@@ -13,13 +13,13 @@ namespace PiGraphQlSchema.IGraphQl
         QLPiSystem GetPiSystem(IResolveFieldContext context);
 
         [GraphQLMetadata("afDatabase")]
-        QLAfDatabase GetAfDatabase(ResolveFieldContext context, string aAfDatabasePath);
+        QLAfDatabase GetAfDatabase(IResolveFieldContext context, string aAfDatabasePath);
 
         [GraphQLMetadata("afElement")]
-        QLAfElement GetAfElementByPath(ResolveFieldContext context, string aAfElementPath);
+        QLAfElement GetAfElementByPath(IResolveFieldContext context, string aAfElementPath);
 
         [GraphQLMetadata("afElementTemplates")]
-        List<QLAfElementTemplate> GetAfElementTemplates(ResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null);
+        List<QLAfElementTemplate> GetAfElementTemplates(IResolveFieldContext context, string aAfDatabasePath, string[] nameFilter = null);
 
 
     }
