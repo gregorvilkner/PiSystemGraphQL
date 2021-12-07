@@ -48,6 +48,7 @@
                 afElement(aAfElementPath: String!): QLAfElement
                 afElementTemplates(aAfDatabasePath : String!, nameFilter: [String]): [QLAfElementTemplate]
                 hello: String
+                gpio(pin1: String, pin2: String, pin3: String): [String]
             }
 
             ";

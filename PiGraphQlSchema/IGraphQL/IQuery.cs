@@ -9,6 +9,10 @@ namespace PiGraphQlSchema.IGraphQl
         [GraphQLMetadata("hello")]
         string GetHello();
 
+        [GraphQLMetadata("gpio")]
+        List<string> GetGGIO(IResolveFieldContext context, string pin1, string pin2, string pin3);
+
+
         [GraphQLMetadata("piSystem")]
         QLPiSystem GetPiSystem(IResolveFieldContext context);
 

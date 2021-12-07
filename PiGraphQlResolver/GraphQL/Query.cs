@@ -27,6 +27,13 @@ namespace PiGraphQlResolver.GraphQL
             return ResolverEntry.aPiSystem.Name;
         }
 
+        [GraphQLMetadata("gpio")]
+        public List<string> GetGGIO(IResolveFieldContext context, string pin1, string pin2, string pin3)
+        {
+            return new List<string>();
+        }
+
+
         [GraphQLMetadata("piSystem")]
         public QLPiSystem GetPiSystem(IResolveFieldContext context)
         {
